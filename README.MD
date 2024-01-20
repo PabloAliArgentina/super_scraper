@@ -6,4 +6,6 @@ Nowadays it supports some markets from Argentina, but the aim is to add as many 
 
 DISCLAIMER: Web pages are in continuous change, then some scrapers may fail eventually, please report when it happens so I can correct issues.
 
-HOW to 
+# HOW TO:
+
+  Super scraper is built on the framework [scrapy](https://scrapy.org/)
