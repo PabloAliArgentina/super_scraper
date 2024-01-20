@@ -1,4 +1,4 @@
-#SUPER SCRAPER
+# SUPER SCRAPER
 
 This project has several scrapers getting price, stock, codes and some other information from supermarkets web pages.
 
