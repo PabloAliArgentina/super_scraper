@@ -17,9 +17,6 @@ Some information from a supermarket may be not in another one, this limitation d
 - Connection to internet ;)
 
 # HOW TO:
-
-  Super_scraper is built on the framework [scrapy](https://scrapy.org/)
-
     
 
 1) Get a copy of the repository, both using git: 
@@ -40,4 +37,4 @@ Some information from a supermarket may be not in another one, this limitation d
 
 
 
-### Project is pretty new, so suggestion, feedback and collaborations are very welcome
+### Project is pretty new. Suggestions, feedback and collaborations are very welcome
