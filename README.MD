@@ -1,6 +1,6 @@
 # SUPER SCRAPER
 
-This project has several scrapers getting price, stock, codes and some other information from supermarkets web pages.
+This project has several scrapers getting prices, stock, codes and some other information from supermarkets web pages.
 
 Nowadays it supports some markets from Argentina, but the aim is to add as many sites as possible.
 
