@@ -60,6 +60,13 @@ class Carrefourspider(scrapy.Spider):
             url = (data_json.get(f'Product:sp-{id}-none', {})
                    .get('link')
                    )
+            brand = (data_json.get(f'Product:sp-{id}-none', {})
+                   .get('brand')
+                   )
+            pr_id = (data_json.get(f'Product:sp-{id}-none', {})
+                   .get('productId')
+                   )
+            
 
             # Find deeper fields in properties :
             for key, item in data_json.items():
@@ -84,6 +91,8 @@ class Carrefourspider(scrapy.Spider):
 
             yield {'name': name,
                    'ean': ean,
+                   'id': pr_id,
+                   'brand': brand,
                    'price': price,
                    'unit': unit,
                    'url': self.base_url + url,
