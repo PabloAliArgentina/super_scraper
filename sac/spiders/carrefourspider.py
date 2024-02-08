@@ -96,7 +96,7 @@ class Carrefourspider(scrapy.Spider):
                    'price': price,
                    'unit': unit,
                    'url': self.base_url + url,
-                   'img_url': image_url
+                   'image_url': image_url
                    }
 
         # #Recursively returns next pages results to scrawler
