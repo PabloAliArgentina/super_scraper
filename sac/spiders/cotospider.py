@@ -20,10 +20,16 @@ class CotoSpider(scrapy.Spider):
     def parse(self, response):
 
         def clean_text(text: str) -> str:
-            text_ = text.replace('\n', '').replace('\t', '').strip()
-            text_ = " ".join(text_.split())
-            return text_
+            result = text.replace('\n', '').replace('\t', '').strip()
+            result = " ".join(result.split())
+            return result
         
+        def parse_price(price:str) -> float:
+            return float(price.replace('$', '')
+                              .replace('.', '')
+                              .replace(',', '.')
+                        )
+
         products = response.css('ul#products.grid').css('div.leftList')
         for product in products:
             result = {'ean': None,
@@ -35,17 +41,42 @@ class CotoSpider(scrapy.Spider):
                       'url': None,
                       'img_url': None}
             try:
-                result['name'] = clean_text(product.css('div.descrip_full::text').get())
-                result['sku'] = product.css('div.descrip_full').attrib['id'].replace('descrip_full_sku','')
-                result['price'] = clean_text(product.css('span.atg_store_productPrice')
-                                           .css('span.atg_store_newPrice::text')
-                                           .get()
-                                           ),
-                result['unit'] = clean_text(product.css('span.unit::text').get())
-                result['url'] = self.base_url + product.css('div.product_info_container').css('a::attr(href)').get()
-                result['img_url'] = product.css('span.atg_store_productImage').css('img::attr(src)').get()
+                result['name'] = clean_text(
+                                    product.css('div.descrip_full::text')
+                                    .get()
+                                )
+                result['sku'] = (product.css('div.descrip_full')
+                                        .attrib['id']
+                                        .replace('descrip_full_sku','')
+                                 )
+                result['price'] = parse_price(
+                                    clean_text(
+                                      product
+                                        .css('span.atg_store_productPrice')
+                                        [0]
+                                        .css('span.atg_store_newPrice::text')
+                                        .get()
+                                    )
+                                  )
+                result['unit'] = clean_text(product.css('span.unit::text')
+                                                   .get()
+                                            )
+                result['url'] = (self.base_url +
+                                    (product
+                                        .css('div.product_info_container')
+                                        .css('a::attr(href)')
+                                        .get()
+                                    )
+                                )
+                result['img_url'] = (product
+                                        .css('span.atg_store_productImage')
+                                        .css('img::attr(src)')
+                                        .get()
+                                    )
 
-                yield scrapy.Request(url=result['url'], callback=self.parse_product, cb_kwargs={"result": result})
+                yield scrapy.Request(url=result['url'],
+                                     callback=self.parse_product,
+                                     cb_kwargs={"result": result})
 
             except:
                 pass
@@ -55,7 +86,6 @@ class CotoSpider(scrapy.Spider):
         pagination_items = response.css('ul#atg_store_pagination').css('li')
         next_page = None
         for index, item in enumerate(pagination_items):
-            # print ('\n' * 10 + item.get())
             if 'class' in item.attrib and 'active' in item.attrib['class']:
                 route = pagination_items[index + 1].css('a::attr(href)').get()
                 if route is not None:
@@ -82,6 +112,11 @@ class CotoSpider(scrapy.Spider):
         for tr in response.css('tr'):
             if len(tr.css('td')) == 2:
                 if tr.css('td')[0].css('span::text').get() == 'MARCA':
-                    result['brand'] = tr.css('td')[1].css('span.texto::text').get()
+                    result['brand'] = (tr
+                                         .css('td')
+                                         [1]
+                                         .css('span.texto::text')
+                                         .get()
+                                      )
 
         yield result
