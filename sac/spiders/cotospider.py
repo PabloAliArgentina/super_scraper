@@ -26,8 +26,10 @@ class CotoSpider(scrapy.Spider):
         
         products = response.css('ul#products.grid').css('div.leftList')
         for product in products:
-            result = {'name': None,
+            result = {'ean': None,
+                      'name': None,
                       'sku': None,
+                      'brand': None,
                       'price': None,
                       'unit': None,
                       'url': None,
@@ -64,7 +66,9 @@ class CotoSpider(scrapy.Spider):
             yield scrapy.Request(next_page, callback=self.parse)
 
 
+    #Parse product looking for more data
     def parse_product(self, response, result):
+        #Get EAN
         for div in response.css('div'):
             id = div.attrib.get('id')
             if (id == 'brandText'):
@@ -73,5 +77,11 @@ class CotoSpider(scrapy.Spider):
                 if text:
                     result['ean'] = text.group(1)
                     break
+
+        #Get Brand
+        for tr in response.css('tr'):
+            if len(tr.css('td')) == 2:
+                if tr.css('td')[0].css('span::text').get() == 'MARCA':
+                    result['brand'] = tr.css('td')[1].css('span.texto::text').get()
 
         yield result
