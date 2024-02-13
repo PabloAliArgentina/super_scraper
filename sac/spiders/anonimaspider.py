@@ -19,7 +19,9 @@ class Anonimaspider(scrapy.Spider):
                 "https://supermercado.laanonimaonline.com/hogar/n1_9/"]
         for url in urls:
             params = {'page_number': 0, 'base_url': url}
-            yield scrapy.Request(url=url, callback=self.parse, cb_kwargs=params)
+            yield scrapy.Request(url=url,
+                                 callback=self.parse,
+                                 cb_kwargs=params)
 
     def parse(self, response, page_number, base_url):
         products = response.css('div.producto')
@@ -28,17 +30,18 @@ class Anonimaspider(scrapy.Spider):
         for product in products:
             result = {'name': None,
                       'sku': None,
+                      'brand': None,
                       'price': None,
                       'discount_price': None,
                       'previous_price': None,
-                      'brand': None,
                       'url': None,
                       'img_url': None
                       }
 
             for _input in product.css('input'):
                 if 'name' in _input.attrib and 'value' in _input.attrib:
-                    field, value = _input.attrib['name'], _input.attrib['value']
+                    field = _input.attrib['name']
+                    value = _input.attrib['value']
                     if 'sku_item_imetrics' in field:
                         result['sku'] = value
                     elif 'name_item_imetrics' in field:
@@ -70,7 +73,10 @@ class Anonimaspider(scrapy.Spider):
         # #Recursively returns next pages results to scrawler
         next_page = f'{base_url}pag/{page_number + 1}/'
         try:
-            yield scrapy.Request(next_page, callback=self.parse,
-                                 cb_kwargs={'base_url': base_url, 'page_number': page_number + 1})
+            yield scrapy.Request(next_page,
+                                 callback=self.parse,
+                                 cb_kwargs={'base_url': base_url,
+                                            'page_number': page_number + 1}
+                                )
         except Exception as e:
             raise e

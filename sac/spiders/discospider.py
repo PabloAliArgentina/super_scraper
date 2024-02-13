@@ -45,11 +45,11 @@ class Disco_spider(scrapy.Spider):
         # Parse dictionary and return results
         for product in products:
             result = {}
-            result['name'] = product.get('productName')
-            result['id'] = product.get('productId')
             result['ean'] = (product.get('items', [{}])[0]
                                     .get('ean')
                              )
+            result['name'] = product.get('productName')
+            result['id'] = product.get('productId')
             result['brand'] = product.get('brand')
             result['price'] = (product.get('items', [{}])[0]
                                .get('sellers', [{}])[0]
@@ -79,10 +79,14 @@ class Disco_spider(scrapy.Spider):
         product_index += self.page_size
         if product_index > last_product_index:
             return
-        next_page = self.generate_request(category=category, _from=product_index,
-                                          _to=product_index + self.page_size - 1)
+        next_page = self.generate_request(category = category,
+                                          _from = product_index,
+                                          _to = product_index +
+                                            self.page_size - 1)
         try:
-            yield scrapy.Request(next_page, callback=self.parse,
-                                 cb_kwargs={'category': category, 'product_index': product_index})
+            yield scrapy.Request(next_page,
+                                 callback=self.parse,
+                                 cb_kwargs={'category': category, 
+                                            'product_index': product_index})
         except Exception as e:
             raise e
