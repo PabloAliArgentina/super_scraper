@@ -4,6 +4,16 @@ This project has several scrapers getting prices, stock, codes and some other in
 
 Nowadays it supports some markets from Argentina, but the aim is to add as many sites as possible.
 
+Supported supermarkets nowadays are:
+
+- La Anonima
+- Atomo
+- Carrefour
+- Coto
+- Disco
+- Jumbo
+- Vea
+
 DISCLAIMER: Web pages are in continuous change, then some scrapers may fail eventually, please report when it happens so I can correct issues.
 Some information from a supermarket may be not in another one, this limitation depends on what information is given from each site.
 
