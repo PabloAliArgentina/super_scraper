@@ -1,5 +1,6 @@
 import json
 from base64 import b64encode
+from time import time
 import scrapy
 
 
@@ -56,6 +57,7 @@ class jumbospider(scrapy.Spider):
                                .get('commertialOffer', {})
                                .get('Price')
                                )
+            result['date'] = round(time())
             result['measurement_unit'] = json.loads(product.get('properties', [{}])[0]
                                                            .get('values', ['{}'])[0]
                                                     ).get('measurement_unit_un')

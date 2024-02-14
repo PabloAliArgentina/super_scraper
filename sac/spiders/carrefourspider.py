@@ -1,6 +1,6 @@
 import json
 import re
-
+from time import time
 import scrapy
 
 
@@ -94,6 +94,7 @@ class Carrefourspider(scrapy.Spider):
                    'id': pr_id,
                    'brand': brand,
                    'price': price,
+                   'date': (round(time())),
                    'unit': unit,
                    'url': self.base_url + url,
                    'image_url': image_url
