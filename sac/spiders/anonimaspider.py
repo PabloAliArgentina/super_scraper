@@ -1,4 +1,5 @@
 import scrapy
+from time import time 
 
 
 class Anonimaspider(scrapy.Spider):
@@ -32,6 +33,7 @@ class Anonimaspider(scrapy.Spider):
                       'sku': None,
                       'brand': None,
                       'price': None,
+                      'date': (round(time())),
                       'discount_price': None,
                       'previous_price': None,
                       'url': None,

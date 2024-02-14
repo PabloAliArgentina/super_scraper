@@ -1,5 +1,6 @@
 import scrapy
 import re
+from time import time
 
 class CotoSpider(scrapy.Spider):
     name = "CotoSpider"
@@ -37,6 +38,7 @@ class CotoSpider(scrapy.Spider):
                       'sku': None,
                       'brand': None,
                       'price': None,
+                      'date': (round(time())),
                       'unit': None,
                       'url': None,
                       'img_url': None}
