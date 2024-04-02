@@ -70,7 +70,8 @@ class Toledo_Spider(scrapy.Spider):
                           )
         result['price'] = (response.xpath('//meta[@itemprop="price"]/@content')
                                     .get()
-                          )        
+                          )
+        result['price'] = float(result['price']) if result['price'] is not None else None        
         result['date'] = round(time())      
         result['measurement_unit'] = (response.xpath('//td[@data-th="Unidad de medida"]/text()')
                                               .get()
