@@ -5,6 +5,10 @@ class Toledo_Spider(scrapy.Spider):
     name = "toledospider"
     base_url = 'https://toledodigital.com.ar'
 
+    def __init__(self, *args, **kwargs):
+        super(Toledo_Spider, self).__init__(*args, **kwargs)
+        self.market_name = 'toledo'
+
     def start_requests(self):
         subs = ["/2-Almacén.html",
                 "/2-Frescos.html",

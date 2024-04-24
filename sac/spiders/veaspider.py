@@ -9,6 +9,10 @@ class veaspider(scrapy.Spider):
     name = "veaspider"
     base_url = 'https://www.vea.com.ar'
     page_size = 100
+    
+    def __init__(self, *args, **kwargs):
+        super(veaspider, self).__init__(*args, **kwargs)
+        self.market_name = 'vea'
 
         #Returns the hash needed to make queries
     def get_query_hash(self, url:str):

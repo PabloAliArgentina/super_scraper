@@ -10,6 +10,10 @@ class Disco_spider(scrapy.Spider):
     base_url = 'https://www.disco.com.ar'
     page_size = 100
 
+    def __init__(self, *args, **kwargs):
+        super(Disco_spider, self).__init__(*args, **kwargs)
+        self.market_name = 'disco'
+
     #Returns the hash needed to make queries
     def get_query_hash(self, url:str):
         response = requests.get(url=url)
@@ -18,7 +22,7 @@ class Disco_spider(scrapy.Spider):
         data = None
 
         #Look for '__STATE__' in scripts
-        #and extract the json containig the hash
+        #and extract the json further containig the hash
         for script in scripts:
             script_lines = script.splitlines()
             for script_line in script_lines:
@@ -44,7 +48,6 @@ class Disco_spider(scrapy.Spider):
                     _hash = hash_entries[0].replace('"hash":', '').replace('"', '')
                     break
 
-        print ('el Hash es: ', _hash)
         return _hash
 
     #Returns a request to specific category and range of indexes
@@ -52,6 +55,7 @@ class Disco_spider(scrapy.Spider):
         variables = f'{{"hideUnavailableItems":true,"skusFilter":"FIRST_AVAILABLE","simulationBehavior":"default","installmentCriteria":"MAX_WITHOUT_INTEREST","productOriginVtex":false,"map":"c","query":"{category}","orderBy":"OrderByScoreDESC","from":{_from},"to":{_to},"selectedFacets":[{{"key":"c","value":"{category}"}}],"operator":"and","fuzzy":"0","searchState":null,"facetsBehavior":"Static","categoryTreeBehavior":"default","withFacets":false}}'
         variables = b64encode(variables.encode('utf-8')).decode('utf-8')
         return f'{self.base_url}/_v/segment/graphql/v1?workspace=master&maxAge=short&appsEtag=remove&domain=store&locale=es-AR&operationName=productSearchV3&variables=%7B%7D&extensions=%7B%22persistedQuery%22%3A%7B%22version%22%3A1%2C%22sha256Hash%22%3A%22{_hash}%22%2C%22sender%22%3A%22vtex.store-resources%400.x%22%2C%22provider%22%3A%22vtex.search-graphql%400.x%22%7D%2C%22variables%22%3A%22{variables}%3D%3D%22%7D'
+    
     def start_requests(self):
         categories = ["almacen",
                       "bebidas",

@@ -8,6 +8,10 @@ class Carrefourspider(scrapy.Spider):
     name = "carrefourspider"
     base_url = 'http://www.carrefour.com.ar'
 
+    def __init__(self, *args, **kwargs):
+        super(Carrefourspider, self).__init__(*args, **kwargs)
+        self.market_name = 'carrefour'
+
     def start_requests(self):
         urls = ["https://www.carrefour.com.ar/Almacen",
                 "https://www.carrefour.com.ar/Desayuno-y-merienda",
