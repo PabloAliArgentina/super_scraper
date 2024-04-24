@@ -3,8 +3,13 @@ import re
 from time import time
 
 class CotoSpider(scrapy.Spider):
-    name = "CotoSpider"
+    name = "cotospider"
     base_url = "https://www.cotodigital3.com.ar"
+
+
+    def __init__(self, *args, **kwargs):
+        super(CotoSpider, self).__init__(*args, **kwargs)
+        self.market_name = 'coto'
 
     def start_requests(self):
 

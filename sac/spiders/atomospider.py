@@ -5,6 +5,10 @@ from time import time
 class Atomospider(scrapy.Spider):
     name = "atomospider"
 
+    def __init__(self, *args, **kwargs):
+        super(Atomospider, self).__init__(*args, **kwargs)
+        self.market_name = 'atomo'
+
     def start_requests(self):
         urls = ["https://atomoconviene.com/atomo-ecommerce/3-almacen",
                 "https://atomoconviene.com/atomo-ecommerce/81-bebidas",

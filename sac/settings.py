@@ -61,11 +61,22 @@ COOKIES_ENABLED = False
 #    "scrapy.extensions.telnet.TelnetConsole": None,
 #}
 
+
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
+ITEM_PIPELINES = {
 #    "sac.pipelines.SacPipeline": 300,
-#}
+   "sac.pipelines.MongoPipeline": 100,
+   "sac.pipelines.MongoMergerPipeline": 200
+}
+
+MONGO_MARKET_URI = 'localhost'
+MONGO_MARKET_DATABASE = 'sac'
+
+MONGO_MERGER_URI = 'localhost'
+MONGO_MERGER_DATABASE = 'sac'
+MONGO_MERGER_COLLECTION = 'merged'
+
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html

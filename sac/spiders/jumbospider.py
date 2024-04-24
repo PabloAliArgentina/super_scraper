@@ -10,6 +10,10 @@ class jumbospider(scrapy.Spider):
     base_url = 'https://www.jumbo.com.ar'
     page_size = 100
 
+    def __init__(self, *args, **kwargs):
+        super(jumbospider, self).__init__(*args, **kwargs)
+        self.market_name = 'jumbo'
+
     #Returns the hash needed to make queries
     def get_query_hash(self, url:str):
         response = requests.get(url=url)
