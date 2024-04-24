@@ -80,9 +80,10 @@ class MongoMergerPipeline:
         brand = item.get('brand')
         img_url = item.get('img_url')
         date = item.get('date')
-        document = self.coll.find_one_and_update({'ean': item['ean']},
+        document = self.coll.find_one_and_update({'ean': ean},
                                                  {'$set':
-                                                    {'ean': item['ean'],
+                                                    {'ean': ean,
+                                                     'name': name,
                                                     f'markets.{market}': {'price': price,
                                                                         'date': date
                                                                         },
