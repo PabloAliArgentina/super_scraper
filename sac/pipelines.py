@@ -6,6 +6,7 @@
 
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
+from scrapy.exceptions import DropItem
 import pymongo
 
 
@@ -18,6 +19,21 @@ class MockPipeline:
     @classmethod
     def from_crawler(cls, crawler):
         print ('DEBUG_from_crawler.somevalue', crawler.settings.get('SOME_VALUE'))
+
+class ValidatePipeline:
+    def __init__(self) -> None:
+        self.mandatory_fields = ['ean', 'name', 'price']
+
+    def process_item(self, item, spider):
+        for field in self.mandatory_fields:
+            value = item.get(field)
+            if (    (value is None) 
+                or  (value == '')
+                or  (value == 0)
+            ):
+                raise DropItem(f'Missing or wrong value ({value}) in field: {field}')
+                
+        return item
 
 class MongoPipeline:
     def __init__(self, mongo_uri, mongo_db):
@@ -36,6 +52,7 @@ class MongoPipeline:
         self.client = pymongo.MongoClient(self.mongo_uri)
         self.db = self.client[self.mongo_db]
         self.coll = self.db[spider.market_name]
+        self.coll.drop()
 
     def close_spider(self, spider):
         self.client.close()

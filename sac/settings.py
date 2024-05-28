@@ -66,8 +66,9 @@ COOKIES_ENABLED = False
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
 #    "sac.pipelines.SacPipeline": 300,
-   "sac.pipelines.MongoPipeline": 100,
-   "sac.pipelines.MongoMergerPipeline": 200
+   "sac.pipelines.ValidatePipeline": 100, 
+   "sac.pipelines.MongoPipeline": 200,
+   "sac.pipelines.MongoMergerPipeline": 300
 }
 
 MONGO_MARKET_URI = 'localhost'
