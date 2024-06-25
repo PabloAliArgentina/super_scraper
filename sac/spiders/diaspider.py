@@ -6,11 +6,11 @@ import scrapy
 
 class Diaspider(scrapy.Spider):
     name = "diaspider"
-    base_url = 'https://diaonline.supermercadosdia.com.ar'
+    base_url = 'https://diaonline.supermercadosdia.com.ar/'
 
     def __init__(self, *args, **kwargs):
         super(Diaspider, self).__init__(*args, **kwargs)
-        self.market_name = 'carrefour'
+        self.market_name = 'dia'
 
     def start_requests(self):
         urls = ["https://diaonline.supermercadosdia.com.ar/almacen",
@@ -62,7 +62,7 @@ class Diaspider(scrapy.Spider):
                     .get('productName')
                     )
             url = (data_json.get(f'Product:{id}', {})
-                   .get('link')
+                   .get('linkText')
                    )
             brand = (data_json.get(f'Product:{id}', {})
                    .get('brand')
@@ -72,13 +72,13 @@ class Diaspider(scrapy.Spider):
                    )
             
 
-            # Find deeper fields in properties :
-            for key, item in data_json.items():
-                pattern = fr'^Product:{id}.properties.(\d+)$'
-                if bool(re.match(pattern, key)):
-                    if 'name' in item:
-                        if item['name'].lower() == 'PrecioPorUnd':
-                            unit = (item['values']['json'][0])
+            # # Find deeper fields in properties :
+            # for key, item in data_json.items():
+            #     pattern = fr'^Product:{id}.properties.(\d+)$'
+            #     if bool(re.match(pattern, key)):
+            #         if 'name' in item:
+            #             if item['name'].lower() == 'PrecioPorUnd':
+            #                 unit = (item['values']['json'][0])
 
 
             # Find image url and ean requires a tricky and even deeper search into specific .items field:
@@ -101,7 +101,7 @@ class Diaspider(scrapy.Spider):
                    'price': price,
                    'date': (round(time())),
                    'unit': unit,
-                   'url': self.base_url + url,
+                   'url': self.base_url + url + '/p',
                    'image_url': image_url
                    }
 

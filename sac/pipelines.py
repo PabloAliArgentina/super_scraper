@@ -8,7 +8,7 @@
 from itemadapter import ItemAdapter
 from scrapy.exceptions import DropItem
 import pymongo
-
+from sac.keywords_gen import get_keywords
 
 class SacPipeline:
     def process_item(self, item, spider):
@@ -94,20 +94,29 @@ class MongoMergerPipeline:
         market = spider.market_name
         price = item.get('price')
         name = item.get('name')
+        keywords = get_keywords(name),
+
+        if isinstance(keywords[0], list):  #PARA CHEQUEAR, todavía no entiendo por qué sucede esto
+            keywords = keywords[0]          #Pero por alguna razón, keywords se convierte en una lista de listas cuando solo debería ser una lista de string
+            
         brand = item.get('brand')
+        if brand: brand = brand.upper()
         img_url = item.get('img_url')
         date = item.get('date')
+
         document = self.coll.find_one_and_update({'ean': ean},
                                                  {'$set':
                                                     {'ean': ean,
                                                      'name': name,
+                                                     'keywords': keywords,
                                                     f'markets.{market}': {'price': price,
                                                                         'date': date
-                                                                        },
-                                                    }
+                                                                        }
                                                     },
-                                                    upsert=True,
-                                                    return_document=pymongo.ReturnDocument.AFTER
+                                                 '$addToSet': {'marketSet': market.upper()}
+                                                },
+                                                upsert=True,
+                                                return_document=pymongo.ReturnDocument.AFTER
                     )        
         if (document.get('brand') in (None, '')):
             self.coll.update_one({'_id': document['_id']},
@@ -122,4 +131,12 @@ class MongoMergerPipeline:
                                         'img_url': img_url 
                                     }
                                  })
+    
+        prices = [market['price'] for market in document['markets'].values()]
+        self.coll.update_one({'_id': document['_id']},
+                             {'$set':
+                                {'min_price': min(prices),
+                                 'max_price': max(prices),
+                                 'mean_price': sum(prices) / len(prices)}
+                             })
         return item
