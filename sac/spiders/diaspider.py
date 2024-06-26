@@ -39,8 +39,6 @@ class Diaspider(scrapy.Spider):
                 break
         data = data.replace('<script>', '').replace('</script>', '')
         data_json = json.loads(data)
-        with open('data.json', 'w', encoding='utf-8') as f:
-            json.dump(data_json, f, ensure_ascii=False, indent=4)
 
         # firts step is to get product's ids
         products_ids = []
