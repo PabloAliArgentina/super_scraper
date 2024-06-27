@@ -68,6 +68,14 @@ class ChangoSpider(scrapy.Spider):
 
     def parse(self, response, category, product_index):
 
+        #Los forros de changomas encodean el ean, le sacan el ultimo dígito y le agregan un 0 adelante
+        def fix_ean(bad_ean:str) -> str:
+            bad_ean = bad_ean[1:]
+            digits = [int(i) for i in reversed(bad_ean)]
+            checksum_digit = str((10 - (3 * sum(digits[0::2]) + (sum(digits[1::2])))) % 10)
+            return bad_ean + checksum_digit
+
+
         # Get json containing products and the number of products
         jsn = json.loads(response.text)
         last_product_index = jsn['data']['productSearch']['recordsFiltered'] - 1
@@ -81,6 +89,7 @@ class ChangoSpider(scrapy.Spider):
             result['ean'] = (product.get('items', [{}])[0]
                                     .get('ean')
                              )
+            if isinstance(result['ean'], str): result['ean'] = fix_ean(result['ean'])     
             result['brand'] = product.get('brand')
             result['price'] = (product.get('items', [{}])[0]
                                .get('sellers', [{}])[0]
